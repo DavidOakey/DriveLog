@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
+             xmlns:cells="clr-namespace:DriveLog.Views.Cells"
+             xmlns:controls="clr-namespace:DriveLog.Controls"
+             x:Class="DriveLog.Pages.DashboardPage"
+             Title="DashboardPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="0" Grid.Column="0" Margin="5" BackgroundColor="Gray">
+                    <Label 
+                        Text="MAP"
+                        FontSize="24"
+                        TextColor="Black"
+                        BackgroundColor="LightGray"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="Fill" />
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1" Margin="5" BackgroundColor="Gray">
+                    <controls:GForceView CurrentReading="{Binding LastAccelerationReading}" BackgroundColor="White"/>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="2" Margin="5" BackgroundColor="Gray">
+                    <controls:SpeedGraphic CurrentReading="{Binding CurrentSpeedText}"  BackgroundColor="White"/>
+                </Border>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0"
+Text="Last Trips"
+   FontSize="24"
+TextColor="Black"
+                   BackgroundColor="Grey"
+VerticalOptions="Center"
+HorizontalOptions="Center" >
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LastTripsButtonCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Row="1" Grid.Column="0"
+Text="All Trips"
+   FontSize="24"
+TextColor="Black"
+                   BackgroundColor="Grey"
+VerticalOptions="Center"
+HorizontalOptions="Center" >
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AllTripsButtonCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <ListView Grid.Row="2" Grid.Column="0" 
+                      Margin="5"
+                      BackgroundColor="Aqua" 
+                      IsVisible="True"
+                      ItemsSource="{Binding ViewData}">
+                <!--IsVisible="{Binding ShowAllTrips}"-->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <cells:TripViewCell/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Label Grid.Row="3" Grid.Column="0" Margin="5"
+    Text="{Binding StartStopTripCommandText}"
+    FontSize="24"
+    BackgroundColor="Gray"
+    FontAttributes="Bold"
+    TextColor="Green"
+    VerticalOptions="Center" 
+    HorizontalOptions="Center" >
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+         Binding="{Binding IsRecordingTrip}"
+         Value="True">
+                        <Setter Property="Text" Value="STOP" />
+                        <Setter Property="BackgroundColor" Value="Red" />
+                        <Setter Property="TextColor" Value="Green" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label"
+        Binding="{Binding IsRecordingTrip}"
+        Value="False">
+                        <Setter Property="Text" Value="Start" />
+                        <Setter Property="BackgroundColor" Value="Green" />
+                        <Setter Property="TextColor" Value="Black" />
+                    </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding StartStopTripCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+    </Grid>
+</ContentPage>

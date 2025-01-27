@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
+             x:Class="DriveLog.Views.MapView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="MapStyleButton" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="LightGray" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+            <Style x:Key="MapStyleButtonSelected" TargetType="Label" BasedOn="{StaticResource MapStyleButton}">
+                <Setter Property="BackgroundColor" Value="DarkGray" />
+                <Setter Property="TextColor" Value="Black" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Label Grid.Row="0" Grid.Column="0" Text="Street" Style="{StaticResource MapStyleButton}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                     Binding="{Binding ButtonMapTypeStreetEnabled}"
+                     Value="True">
+                        <Setter Property="Style" Value="{StaticResource MapStyleButtonSelected}" />
+                    </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding MapTypeStreetCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            
+            <Label Grid.Row="0" Grid.Column="1" Text="Satellite" Style="{StaticResource MapStyleButton}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                     Binding="{Binding ButtonMapTypeSatelliteEnabled}"
+                     Value="True">
+                        <Setter Property="Style" Value="{StaticResource MapStyleButtonSelected}" />
+                    </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding MapTypeSatelliteCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            
+            <Label Grid.Row="0" Grid.Column="2" Text="Hybrid" Style="{StaticResource MapStyleButton}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                     Binding="{Binding ButtonMapTypeHybridEnabled}"
+                     Value="True">
+                        <Setter Property="Style" Value="{StaticResource MapStyleButtonSelected}" />
+                    </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding MapTypeHybridCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            
+        </Grid>
+        
+        <maps:Map x:Name="mapC" Grid.Row="1" Grid.Column="0" MapType="{Binding MapType}" IsScrollEnabled="True" />
+    </Grid>
+</ContentView>
