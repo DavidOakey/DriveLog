@@ -26,7 +26,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
@@ -44,14 +44,12 @@
                 <Border Grid.Row="0" Grid.Column="1" Margin="5" BackgroundColor="Gray">
                     <controls:GForceView CurrentReading="{Binding LastAccelerationReading}" BackgroundColor="White"/>
                 </Border>
-                <Border Grid.Row="0" Grid.Column="2" Margin="5" BackgroundColor="Gray">
-                    <controls:SpeedGraphic CurrentReading="{Binding CurrentSpeedText}"  BackgroundColor="White"/>
-                </Border>
+
+                <controls:SpeedGraphic Grid.Row="0" Grid.Column="2" CurrentReading="{Binding CurrentSpeedText}"  BackgroundColor="White"/>
             </Grid>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -59,59 +57,156 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0"
-Text="Last Trips"
-   FontSize="24"
-TextColor="Black"
-                   BackgroundColor="Grey"
-VerticalOptions="Center"
-HorizontalOptions="Center" >
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding LastTripsButtonCommand}"/>
-                </Label.GestureRecognizers>
-            </Label>
-            <Label Grid.Row="1" Grid.Column="0"
-Text="All Trips"
-   FontSize="24"
-TextColor="Black"
-                   BackgroundColor="Grey"
-VerticalOptions="Center"
-HorizontalOptions="Center" >
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding AllTripsButtonCommand}"/>
-                </Label.GestureRecognizers>
-            </Label>
-            <ListView Grid.Row="2" Grid.Column="0" 
-                      Margin="5"
-                      BackgroundColor="Aqua" 
-                      IsVisible="True"
-                      ItemsSource="{Binding ViewData}">
-                <!--IsVisible="{Binding ShowAllTrips}"-->
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <cells:TripViewCell/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <Label Grid.Row="3" Grid.Column="0" Margin="5"
-    Text="{Binding StartStopTripCommandText}"
-    FontSize="24"
-    BackgroundColor="Gray"
-    FontAttributes="Bold"
-    TextColor="Green"
-    VerticalOptions="Center" 
-    HorizontalOptions="Center" >
+            <Grid Grid.Row="0" Grid.Column="0" Margin="5,0,5,0" ColumnSpacing="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0"
+                    Text="TOTALS"
+                    FontSize="24"
+                    TextColor="Black"
+                    BackgroundColor="Grey"
+                    VerticalOptions="Fill"
+                    HorizontalOptions="Fill" 
+                    HorizontalTextAlignment="Center">
+                </Label>
+            </Grid>
+            <Border Grid.Row="1" Grid.Column="0" Margin="5" BackgroundColor="Gray">
+                <Grid Grid.Row="1" Grid.Column="0" BackgroundColor="LightGray">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0" Margin="5,0,5,0" ColumnSpacing="2" BackgroundColor="Black">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Row="0" Grid.Column="0" Margin="1" BackgroundColor="Gray">
+                            <Label 
+                                Text="Totals Trips Car Bike"
+                                FontSize="24"
+                                TextColor="Black"
+                                BackgroundColor="Grey"
+                                VerticalOptions="Fill"
+                                HorizontalOptions="Fill" 
+                                HorizontalTextAlignment="Center">
+                            </Label>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="1" Margin="1" BackgroundColor="Gray">
+                            <Label 
+                                Text="Sumary Time Miles"
+                                FontSize="24"
+                                TextColor="Black"
+                                BackgroundColor="Grey"
+                                VerticalOptions="Fill"
+                                HorizontalOptions="Fill" 
+                                HorizontalTextAlignment="Center">
+                            </Label>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="2" Margin="1" BackgroundColor="Gray">
+                            <Label 
+                                Text="Efficiency Smoothness"
+                                FontSize="24"
+                                TextColor="Black"
+                                BackgroundColor="Grey"
+                                VerticalOptions="Fill"
+                                HorizontalOptions="Fill" 
+                                HorizontalTextAlignment="Center">
+                            </Label>
+                        </Border>
+                    </Grid>
+                    <ListView Grid.Row="1" Grid.Column="0" 
+                        Margin="5"
+                        BackgroundColor="LightGray" 
+                        IsVisible="True"
+                        ItemsSource="{Binding ViewData}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <cells:TripViewCell/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <Grid Grid.Row="2" Grid.Column="0" Margin="5,0,5,0" ColumnSpacing="2" BackgroundColor="Black">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0"
+                            Text="Last Trip"
+                            FontSize="24"
+                            TextColor="Black"
+                            BackgroundColor="Grey"
+                            VerticalOptions="Fill"
+                            HorizontalOptions="Fill" 
+                            HorizontalTextAlignment="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LastTripButtonCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Label Grid.Row="0" Grid.Column="1"
+                            Text="Last Week"
+                            FontSize="24"
+                            TextColor="Black"
+                            BackgroundColor="Grey"
+                            VerticalOptions="Fill"
+                            HorizontalOptions="Fill" 
+                            HorizontalTextAlignment="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LastTripsButtonCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Label Grid.Row="0" Grid.Column="2"
+                            Text="All Trips"
+                            FontSize="24"
+                            TextColor="Black"
+                            BackgroundColor="Grey"
+                            VerticalOptions="Fill"
+                            HorizontalOptions="Fill" 
+                            HorizontalTextAlignment="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding AllTripsButtonCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+                </Grid>
+            </Border>
+            <Label Grid.Row="2" Grid.Column="0" Margin="5"
+                Text="{Binding StartStopTripCommandText}"
+                FontSize="24"
+                BackgroundColor="Gray"
+                FontAttributes="Bold"
+                TextColor="Green"
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill" 
+                HorizontalTextAlignment="Center">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label"
-         Binding="{Binding IsRecordingTrip}"
-         Value="True">
+                        Binding="{Binding IsRecordingTrip}"
+                        Value="True">
                         <Setter Property="Text" Value="STOP" />
                         <Setter Property="BackgroundColor" Value="Red" />
                         <Setter Property="TextColor" Value="Green" />
                     </DataTrigger>
                     <DataTrigger TargetType="Label"
-        Binding="{Binding IsRecordingTrip}"
-        Value="False">
+                        Binding="{Binding IsRecordingTrip}"
+                        Value="False">
                         <Setter Property="Text" Value="Start" />
                         <Setter Property="BackgroundColor" Value="Green" />
                         <Setter Property="TextColor" Value="Black" />

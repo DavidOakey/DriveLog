@@ -1,20 +1,13 @@
-﻿using DriveLog.Models;
-using Microsoft.Maui;
-using Microsoft.Maui.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DriveLog.Controls.Drawables;
+﻿namespace DriveLog.Controls.Drawables;
 
 public class HorizontalGDrawable : IDrawable
 {
 	private List<PointF>? _envelope;
 	private float _maxReading;
 	private float _graphMax;
-	
+	private float _maxRadius;
+	private float _graphUnitFactor;
+
 	private GForceView Parent {  get; set; }
 
 	public PointF CurrentReading { get; set; } = new PointF(0, 0);
@@ -55,7 +48,7 @@ public class HorizontalGDrawable : IDrawable
 
 	public void Draw(ICanvas canvas, RectF dirtyRect)
 	{
-		DrawRangeCircle(canvas, dirtyRect);
+		DrawRangeCircle(canvas, dirtyRect);		
 		DrawEnvelope(canvas, dirtyRect);
 		DrawCurrent(canvas, dirtyRect);
 	}	
@@ -67,11 +60,15 @@ public class HorizontalGDrawable : IDrawable
 	
 	private void DrawCurrent(ICanvas canvas, RectF dirtyRect)
 	{
-		float maxRadius = MathF.Min(dirtyRect.Height, dirtyRect.Width) * 0.5f;
+		SolidColorBrush instantPaint = new SolidColorBrush
+		{
+			Color = Colors.Green
+		};
 
-		canvas.FillColor = Colors.Green;
-		canvas.FillCircle(dirtyRect.Center.X + (maxRadius * (CurrentReading.X / _graphMax)), 
-			dirtyRect.Center.Y + (maxRadius * (CurrentReading.Y / _graphMax)), 
+		canvas.SetFillPaint(instantPaint, dirtyRect);
+		//canvas.FillColor = Colors.Green;
+		canvas.FillCircle(dirtyRect.Center.X + (CurrentReading.X * _graphUnitFactor), 
+			dirtyRect.Center.Y - (CurrentReading.Y * _graphUnitFactor), 
 			InstantPointSize);
 	}
 
@@ -88,33 +85,50 @@ public class HorizontalGDrawable : IDrawable
 			if (path == null)
 			{
 				path = new PathF();
-				path.MoveTo(p);
+				path.MoveTo(dirtyRect.Center.Y + (p.X * _graphUnitFactor), dirtyRect.Center.Y - (p.Y * _graphUnitFactor));
 			}
 			else
 			{
-				path.MoveTo(p);
+				path.LineTo(dirtyRect.Center.Y + (p.X * _graphUnitFactor), dirtyRect.Center.Y - (p.Y * _graphUnitFactor));
 			}
 		});
 
-		canvas.FillColor = Color.FromRgba(25, 25, 25 , 100);
-		canvas.StrokeSize = 2.0f;
+		Color endColor = Colors.LightBlue.WithAlpha(255 / 150);
+		RadialGradientPaint backGroundPaint = new RadialGradientPaint
+		{
+			StartColor = Color.FromRgba(255, 255, 255, 150),
+			EndColor = endColor
+		};
+
+		canvas.SetFillPaint(backGroundPaint, dirtyRect);
 		canvas.FillPath(path, WindingMode.NonZero);
 	}
 
 	private void DrawRangeCircle(ICanvas canvas, RectF dirtyRect)
 	{
+		_maxRadius = MathF.Min(dirtyRect.Height, dirtyRect.Width) * 0.5f;
+
 		canvas.FontColor = Colors.Black;
 		canvas.StrokeColor = Colors.GreenYellow;
 		canvas.StrokeSize = 2.0f;
 		canvas.FontSize = 8;
 
-		float maxRadius = MathF.Min(dirtyRect.Height, dirtyRect.Width) * 0.5f;
+		RadialGradientPaint backGroundPaint = new RadialGradientPaint
+		{
+			StartColor = Colors.White,
+			EndColor = Colors.LightGray
+		};
+
+		canvas.SetFillPaint(backGroundPaint, dirtyRect);
+		canvas.FillCircle(dirtyRect.Center, _maxRadius);
+
 		Dictionary<float, string> labels = CalculateRangeMarkers();
+		_graphUnitFactor = _maxRadius / _graphMax;
 
 		foreach (var item in labels)
 		{
-			canvas.DrawCircle(dirtyRect.Center, maxRadius * item.Key);
-			canvas.DrawString(item.Value, dirtyRect.Center.X + (maxRadius * item.Key), dirtyRect.Center.Y, 25, 10, HorizontalAlignment.Left, VerticalAlignment.Top);
+			canvas.DrawCircle(dirtyRect.Center, _maxRadius * item.Key);
+			canvas.DrawString(item.Value, dirtyRect.Center.X + (_maxRadius * item.Key), dirtyRect.Center.Y, 25, 10, HorizontalAlignment.Left, VerticalAlignment.Top);
 		};
 	}
 

@@ -3,12 +3,7 @@ using DriveLog.Models;
 using DriveLog.Models.Enums;
 using DriveLog.Pages;
 using DriveLog.ViewModels.Cells;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DriveLog.ViewModels.Pages
@@ -17,6 +12,7 @@ namespace DriveLog.ViewModels.Pages
 	{
 		public enum DashBoardTabs
 		{
+			LastTrip,
 			LastTrips,
 			AllTrips,
 			CarTripsOnly,
@@ -31,6 +27,7 @@ namespace DriveLog.ViewModels.Pages
 		public ICommand MapButtonCommand => new Command(MapButtonClicked);
 		public ICommand StartStopTripCommand => new Command(StartStopTripClicked);
 
+		public ICommand LastTripButtonCommand => new Command(LastTripButtonClicked);
 		public ICommand LastTripsButtonCommand => new Command(LastTripsButtonClicked);
 		public ICommand AllTripsButtonCommand => new Command(AllTripsButtonClicked);
 
@@ -172,7 +169,7 @@ namespace DriveLog.ViewModels.Pages
 			get
 			{
 				return string.Format("{0} mls", 
-				UnitConverters.KilometersToMiles(TripManager.LastTrip.TotalDistanceM / 1000));
+				UnitConverters.KilometersToMiles(TripManager.LastTrip?.TotalDistanceM ?? 0 / 1000));
 			}
 		}
 
@@ -184,7 +181,7 @@ namespace DriveLog.ViewModels.Pages
 			}
 		}
 
-		public TripData LastTripTripData
+		public TripData? LastTripTripData
 		{
 			get
 			{
@@ -341,10 +338,16 @@ namespace DriveLog.ViewModels.Pages
 			IsBusy = false;
 		}
 
+		private void LastTripButtonClicked()
+		{
+			CurrentTabTooShow = DashBoardTabs.LastTrip;
+		}
+
 		private void LastTripsButtonClicked()
 		{
 			CurrentTabTooShow = DashBoardTabs.LastTrips;
 		}
+
 		private void AllTripsButtonClicked()
 		{
 			CurrentTabTooShow = DashBoardTabs.AllTrips;
@@ -352,6 +355,7 @@ namespace DriveLog.ViewModels.Pages
 
 		private async void ShowTripPage()
 		{
+			// TODO deprecation look up Window[n].Page
 			if (((NavigationPage?)App.Current?.MainPage) != null)
 			{
 				await ((NavigationPage)App.Current.MainPage).PushAsync(new TripPage { BindingContext = new TripPageViewModel() });

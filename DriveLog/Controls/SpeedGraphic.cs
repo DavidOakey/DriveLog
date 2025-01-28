@@ -9,6 +9,7 @@ namespace DriveLog.Controls
 		public static readonly BindableProperty CurrentReadingProperty = BindableProperty.Create(nameof(CurrentReading), typeof(int), typeof(SpeedGraphic), 0, propertyChanged: OnCurrentReadingChanged);
 		public static readonly BindableProperty RingColorProperty = BindableProperty.Create(nameof(RingColor), typeof(Color), typeof(SpeedGraphic), Colors.Red, propertyChanged: OnAppearanceChanged);
 		public static readonly BindableProperty CentreColorProperty = BindableProperty.Create(nameof(CentreColor), typeof(Color), typeof(SpeedGraphic), Colors.White, propertyChanged: OnAppearanceChanged);
+		public static readonly BindableProperty TextColorProperty = BindableProperty.Create(nameof(TextColor), typeof(Color), typeof(SpeedGraphic), Colors.Black, propertyChanged: OnAppearanceChanged);
 
 		private static void OnCurrentReadingChanged(BindableObject bindable, object oldValue, object newValue)
 		{
@@ -47,6 +48,12 @@ namespace DriveLog.Controls
 			set => SetValue(CentreColorProperty, value);
 		}
 
+		public Color TextColor
+		{
+			get => (Color)GetValue(TextColorProperty);
+			set => SetValue(TextColorProperty, value);
+		}
+
 		public SpeedGraphic()
 		{
 			RowDefinitions = new RowDefinitionCollection
@@ -78,6 +85,7 @@ namespace DriveLog.Controls
 			{
 				_speedDrawable.RingColor = RingColor;
 				_speedDrawable.CentreColor = CentreColor;
+				_speedDrawable.TextColor = TextColor;
 				_speedView.Invalidate();
 			}
 		}

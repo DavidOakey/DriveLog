@@ -1,33 +1,23 @@
 ﻿using DriveLog.Controls.Drawables;
-using DriveLog.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DriveLog.Controls
 {
 	public class GForceView : Grid
 	{
-		public static readonly BindableProperty AccelerometerDataProperty = BindableProperty.Create(nameof(AccelerometerData), typeof(IList<Vector3>), typeof(GForceView), null, propertyChanged: OnAccelerometerChanged);
+		public static readonly BindableProperty AccelerometerDataProperty = BindableProperty.Create(nameof(AccelerometerData), typeof(IList<Vector3>), typeof(GForceView), new List<Vector3>(), propertyChanged: OnAccelerometerChanged);
 		public static readonly BindableProperty CurrentReadingProperty = BindableProperty.Create(nameof(CurrentReading), typeof(Vector3), typeof(GForceView), new Vector3(0, 0, 0), propertyChanged: OnCurrentReadingChanged);
-
-		//private double ControlHeight = 0;
-		//private double ControlWidth = 0;
 
 		private GraphicsView VerticalGView;
 		private GraphicsView HorizontalGView;
-		//private GraphicsView VerticalInstantGView;
-		//private GraphicsView HorizontalInstantGView;
 
 		private HorizontalGDrawable? _horizontalGDrawable;
 		private VerticalGDrawable? _verticalGDrawable;
 
-		private float MinVertical;
-		private float MaxVertical;
-		private float MaxHorizontal;		
+		private float _minVertical = 0;
+		private float _maxVertical = 0;
+		private float _maxHorizontal = 0;
+
 		private List<PointF> _envelope = new List<PointF>();
 
 		private static void OnAccelerometerChanged(BindableObject bindable, object oldValue, object newValue)
@@ -52,14 +42,12 @@ namespace DriveLog.Controls
 			set
 			{
 				SetValue(CurrentReadingProperty, value);
-
-				if (!IsInPolygon(Envelope, value.X, value.Y))
-				{
-					AccelerometerData.Add(value);
-					CalculateLimits();
-				}
+				
+				AccelerometerData.Add(value);
+				CalculateLimits();
 
 				HorizontalGView.Invalidate();
+				VerticalGView.Invalidate();
 			}
 		}		
 
@@ -90,14 +78,8 @@ namespace DriveLog.Controls
 			this.Add(VerticalGView = new GraphicsView { Margin = 5, BackgroundColor = Colors.Transparent}, 0, 0);
 			this.Add(HorizontalGView = new GraphicsView { Margin = 5, BackgroundColor = Colors.Transparent }, 1, 0);
 
-			//this.Add(VerticalInstantGView = new GraphicsView { Margin = 5, BackgroundColor = Colors.Transparent }, 0, 0);
-			//this.Add(HorizontalInstantGView = new GraphicsView { Margin = 5, BackgroundColor = Colors.Transparent }, 1, 0);
-
 			VerticalGView.Drawable = _verticalGDrawable = new VerticalGDrawable(this);
 			HorizontalGView.Drawable = _horizontalGDrawable = new HorizontalGDrawable(this);
-
-			//VerticalInstantGView.Drawable = _instantVerticalGDrawable = new InstantVerticalGDrawable();
-			//HorizontalInstantGView.Drawable = _instantHorizontalGDrawable = new InstantHorizontalGDrawable();
 		}
 
 		private void UpdateView()
@@ -112,15 +94,15 @@ namespace DriveLog.Controls
 
 			if (_horizontalGDrawable != null)
 			{
-				_horizontalGDrawable.MaxReading = MaxHorizontal;
+				_horizontalGDrawable.MaxReading = _maxHorizontal;
 				_horizontalGDrawable.UpdateEnvelope(Envelope);
 				_horizontalGDrawable.CurrentReading = new PointF(CurrentReading.X, CurrentReading.Y);
 			}
 
 			if (_verticalGDrawable != null)
 			{
-				_verticalGDrawable.MaxReading = MaxVertical;
-				_verticalGDrawable.MinReading = MinVertical;
+				_verticalGDrawable.MaxReading = _maxVertical;
+				_verticalGDrawable.MinReading = _minVertical;
 				_verticalGDrawable.CurrentReading = CurrentReading.Z;
 			}
 		}
@@ -128,19 +110,19 @@ namespace DriveLog.Controls
 		private void CalculateLimits()
 		{
 			Envelope = new List<PointF>();
-			MinVertical = 0;
-			MaxVertical = 0;
-			MaxHorizontal = 0;
+			_maxHorizontal = MathF.Max(_maxHorizontal, new Vector2(CurrentReading.X, CurrentReading.Y).Length()); ;
+			_minVertical = MathF.Min(_minVertical, CurrentReading.Z);
+			_maxVertical = MathF.Max(_maxVertical, CurrentReading.Z);
 
-			if (AccelerometerData == null)
+			if (AccelerometerData == null || AccelerometerData.Count < 1)
 			{
 				return;
 			}
 
-			MinVertical = AccelerometerData.Min(r => r.Z);
-			MaxVertical = AccelerometerData.Max(r => r.Z);
-			
-			MaxHorizontal = AccelerometerData.Max(r => MathF.Min(r.X, r.Y));
+			_minVertical = MathF.Min(_minVertical, AccelerometerData.Min(r => r.Z));
+			_maxVertical = MathF.Max(_maxVertical, AccelerometerData.Max(r => r.Z));
+
+			_maxHorizontal = AccelerometerData.Max(r => new Vector2(r.X, r.Y).Length());
 
 			AccelerometerData.ToList().ForEach(r =>
 			{

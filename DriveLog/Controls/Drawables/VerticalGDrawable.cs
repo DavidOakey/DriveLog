@@ -1,11 +1,4 @@
-﻿using Microsoft.Maui.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DriveLog.Controls.Drawables;
+﻿namespace DriveLog.Controls.Drawables;
 public class VerticalGDrawable : IDrawable
 {
 	private GForceView Parent { get; set; }

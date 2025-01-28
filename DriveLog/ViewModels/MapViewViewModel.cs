@@ -1,10 +1,5 @@
 ﻿using DriveLog.Models;
 using Microsoft.Maui.Maps;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DriveLog.ViewModels
@@ -45,7 +40,7 @@ namespace DriveLog.ViewModels
 		{
 			get
 			{
-				return _mapType == Microsoft.Maui.Maps.MapType.Street;
+				return _mapType == MapType.Street;
 			}
 		}
 
@@ -53,7 +48,7 @@ namespace DriveLog.ViewModels
 		{
 			get
 			{
-				return _mapType == Microsoft.Maui.Maps.MapType.Satellite;
+				return _mapType == MapType.Satellite;
 			}
 		}
 
@@ -61,7 +56,7 @@ namespace DriveLog.ViewModels
 		{
 			get
 			{
-				return _mapType == Microsoft.Maui.Maps.MapType.Hybrid;
+				return _mapType == MapType.Hybrid;
 			}
 		}
 

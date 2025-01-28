@@ -1,11 +1,6 @@
 ﻿using DriveLog.Models;
 using DriveLog.Pages;
 using DriveLog.ViewModels.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DriveLog.ViewModels.Cells
