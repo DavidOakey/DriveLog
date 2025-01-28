@@ -45,7 +45,7 @@
                     <controls:GForceView CurrentReading="{Binding LastAccelerationReading}" BackgroundColor="White"/>
                 </Border>
 
-                <controls:SpeedGraphic Grid.Row="0" Grid.Column="2" CurrentReading="{Binding CurrentSpeedText}"  BackgroundColor="White"/>
+                <controls:SpeedGraphic Grid.Row="0" Grid.Column="2" CurrentReading="{Binding CurrentSpeed}"  BackgroundColor="White"/>
             </Grid>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">

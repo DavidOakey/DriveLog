@@ -101,7 +101,7 @@ namespace DriveLog.ViewModels.Pages
 
 		private void UpdateCurrentLocation()
 		{
-			OnPropertyChanged(nameof(CurrentSpeedText));
+			OnPropertyChanged(nameof(CurrentSpeed));
 		}
 		private void UpdateError(string error)
 		{
@@ -127,12 +127,12 @@ namespace DriveLog.ViewModels.Pages
 			OnPropertyChanged(nameof(LastTripTripData));
 		}
 
-		public string CurrentSpeedText
+		public int CurrentSpeed
 		{
 			get
 			{
-				double? speed = GetSpeed(TripManager.LastLocationReading, SpeedUnits.mph);
-				return string.Format("{0} mph", speed == null ? "NA" : double.Round(speed.Value));
+				double speed = GetSpeed(TripManager.LastLocationReading, SpeedUnits.mph) ?? 0;
+				return (int)double.Round(speed);
 			}
 		}
 

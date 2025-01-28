@@ -1,4 +1,6 @@
 ﻿using DriveLog.Models.Enums;
+using Microsoft.Maui.Devices.Sensors;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace DriveLog.Controls.Drawables;
 
@@ -22,10 +24,30 @@ public class SpeedDrawable : IDrawable
 
 		canvas.FillCircle(dirtyRect.Center, maxRadius);
 		canvas.DrawCircle(dirtyRect.Center, maxRadius);
-		canvas.DrawString(Speed.ToString(), dirtyRect.Center.X, dirtyRect.Center.Y + (maxRadius * 0.25f), HorizontalAlignment.Center);
+		canvas.DrawString(ConvertSpeedToText(Speed), dirtyRect.Center.X, dirtyRect.Center.Y + (maxRadius * 0.25f), HorizontalAlignment.Center);
 
 		canvas.FontSize = maxRadius * 0.25f;
 		canvas.DrawString(GetUnitsText(), dirtyRect.Center.X, dirtyRect.Center.Y + (maxRadius * 0.5f) + 5, HorizontalAlignment.Center);
+	}
+
+	private string ConvertSpeedToText(int speed)
+	{
+		double converted = 0;
+		switch (Units)
+		{
+			default:
+			case SpeedUnits.mph:
+				converted = double.Round(UnitConverters.KilometersToMiles(speed * 3.6));
+				break;
+			case SpeedUnits.kmph:
+				converted = double.Round(speed * 3.6);
+				break;
+			case SpeedUnits.mps:
+				converted = speed;
+				break;
+		}
+
+		return converted.ToString();
 	}
 
 	private string GetUnitsText()

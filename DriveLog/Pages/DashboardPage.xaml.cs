@@ -6,4 +6,9 @@ public partial class DashboardPage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+	private void LocateView(View view)
+	{
+		
+	}
 }

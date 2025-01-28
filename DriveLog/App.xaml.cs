@@ -11,7 +11,6 @@ namespace DriveLog
 			try
 			{
 				InitializeComponent();
-
 				MainPage = new NavigationPage(new DashboardPage { BindingContext = new DashboardPageViewModel() });
 			}
 			catch(Exception ex)
